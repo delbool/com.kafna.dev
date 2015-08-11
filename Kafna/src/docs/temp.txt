@@ -1,0 +1,3 @@
+Multipart on and off using request headers
+http://stackoverflow.com/questions/20162474/how-do-i-receive-a-file-upload-in-spring-mvc-using-both-multipart-form-and-chunk
+
