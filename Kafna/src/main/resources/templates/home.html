@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>Spring Boot Contacts</title>
+	<link rel="stylesheet" th:href="@{/style.css}"/>
+</head>
+	<h2>Spring Boot Contacts</h2>
+	<script th:src="@{/js/jquery/jquery-1.11.3.min.js}" type="text/javascript"></script>
+	<script	th:src="@{/js/underscore/underscore-1.8.3-min.js}" type="text/javascript"></script>
+	<script	th:src="@{/js/backbone/backbone/backbone-1.2.1-min.js}" type="text/javascript"></script>
+<body>
+	<form method="post" name="contactsForm" id="contactsForm">
+		<label for="firstName">First Name: </label><input type="text" name="firstName"></input><br/>
+		<label for="lastName">Last Name: </label><input type="text" name="lastName"></input><br/>
+		<label for="phoneNumber">Phone No: </label><input type="text" name="phoneNumber"></input><br/>
+		<label for="emailAddress">Email Address:</label><input type="text" name="emailAddress"></input><br/>
+		<input type="submit" value="Save User" class="button" id="saveUser"></input>
+		<input type="button" value="REST Save User" class="button" id="restSaveUser"></input>
+	</form>
+	<div class="container">
+		<ul th:each="contact : ${contacts}">
+			<li>
+				<span th:text="${contact.firstName}">First</span>
+				<span th:text="${contact.lastName}">Last</span> :
+				<span th:text="${contact.phoneNumber}">phoneNumber</span>,
+				<span th:text="${contact.emailAddress}">emailAddress</span>
+				<input type="hidden" name="id" th:value="${contact.id}" />
+				<span>
+					<input type="button" value="Update" class="button" id="updateUser" />
+					<input type="button" value="Delete" class="button" id="deleteUser" />
+				</span>
+			</li>
+		</ul>
+	</div>
+</body>
+	<script th:src="@{/js/contacts.js}" type="text/javascript}"></script>
+</html>
