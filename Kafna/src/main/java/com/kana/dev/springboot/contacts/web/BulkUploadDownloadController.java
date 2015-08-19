@@ -1,5 +1,12 @@
 package com.kana.dev.springboot.contacts.web;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +17,6 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.jni.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,21 +53,21 @@ public class BulkUploadDownloadController {
 		String user;
 		String time;
 		File dst = null;
-		Video videoPart = new Video();
+		final Video videoPart = new Video();
 		String responseString = RESP_SUCCESS;
-		boolean isMultipart = ServletFileUpload.isMultipartContent(req);
+		final boolean isMultipart = ServletFileUpload.isMultipartContent(req);
 
 		if (isMultipart) {
-			ServletFileUpload upload = new ServletFileUpload();
+			final ServletFileUpload upload = new ServletFileUpload();
 			try {
-				FileItemIterator iter = upload.getItemIterator(req);
+				final FileItemIterator iter = upload.getItemIterator(req);
 				while (iter.hasNext()) {
-					FileItemStream item = iter.next();
-					InputStream in = item.openStream();
+					final FileItemStream item = iter.next();
+					final InputStream in = item.openStream();
 					// Handle a form field.
 					if (item.isFormField()) {
-						String fieldName = item.getFieldName();
-						String value = Streams.asString(in);
+						final String fieldName = item.getFieldName();
+						final String value = Streams.asString(in);
 						if ("name".equals(fieldName)) {
 							videoPart.setFileName(value);
 							name = value;
@@ -85,21 +91,21 @@ public class BulkUploadDownloadController {
 							LOGGER.debug("id: {}", value);
 						}
 					} else { // Handle a multi-part MIME encoded file.
-						File dstFile = new File(TEMP_DIR);
+						final File dstFile = new File(TEMP_DIR);
 						if (!dstFile.exists()) {
 							dstFile.mkdirs();
 						}
 
 						//File dst = new File(dstFile.getPath() + "/" + this.name); // upload and create only 1 file
-						dst = new File(dstFile.getPath() + File.separator + name + "." + (chunk + 1) + "." + chunks); // create each upload separately and use get to build as 1 file
+						dst = new File(dstFile.getPath() + File.separator + name + "~." + (chunk + 1) + "~." + chunks); // create each upload separately and use get to build as 1 file
 						if ( dst.exists()){
 							// two possibilities: 
 							// 1. either there is already files exist by that name
 							// 2. previous upload did not complete, partial upload exists
-							String [] parts = dst.getName().split("\\.");
+							final String [] parts = dst.getName().split("~.");
 							
 							// case 1
-							String lastChunkName = dstFile.getPath() + File.separator + name + "." + (chunks + 1) + "." + chunks;
+							final String lastChunkName = dstFile.getPath() + File.separator + name + "~." + (chunks + 1) + "~." + chunks;
 							
 							if ( new File(lastChunkName).exists()){
 								// file with same name already uploaded
@@ -116,13 +122,13 @@ public class BulkUploadDownloadController {
 							try (OutputStream out = new BufferedOutputStream(new FileOutputStream(dst, dst.exists()), BUF_SIZE)) {
 								IOUtils.copy(in, out);
 							}	
-						} catch (Exception e) {
+						} catch (final Exception e) {
 							dst.delete();
 							LOGGER.error("User may have aborted upload, so delete this chunk, file: {}", dst.getAbsoluteFile());
 						}
 					}
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				responseString = RESP_ERROR;
 				e.printStackTrace();
 			}
@@ -137,9 +143,9 @@ public class BulkUploadDownloadController {
 		
 		
 		resp.setContentType(JSON);
-		byte[] responseBytes = responseString.getBytes();
+		final byte[] responseBytes = responseString.getBytes();
 		resp.setContentLength(responseBytes.length);
-		ServletOutputStream output = resp.getOutputStream();
+		final ServletOutputStream output = resp.getOutputStream();
 		output.write(responseBytes);
 		output.flush();
 	}
