@@ -22,43 +22,39 @@ public class VideoService {
 	
 	public void uploadVideoFile(final Video videoPart, final String tempDir) {
 		final File [] chunkFiles = getChunkedFiles(videoPart, tempDir);
-		
-		Collections.sort(Arrays.asList(chunkFiles), new Comparator<File>(){
-			@Override
-			public int compare(final File o1, final File o2) {
-				final String [] file1Parts = o1.getName().split("~.");
-				final Integer chunkNo1 = Integer.parseInt(file1Parts[1]);
 				
-				final String [] file2Parts = o2.getName().split("~.");
-				final Integer chunkNo2 = Integer.parseInt(file2Parts[1]);
-				LOGGER.info("===========>> Comparing chunkNo1: {} and chunkNo2: {}", chunkNo1, chunkNo2);
-				return chunkNo1.compareTo(chunkNo2);
-			}
-			
-		});
-		
 		for (final File file : chunkFiles){
 			if (file == null){
 				return;
 			}
 			
 			LOGGER.info("-------------->>> Processing chunk file : " + file.getAbsolutePath());
-			//Video video = createVideoFromChunk(file, videoPart);
+			Video video = createVideoFromChunk(file, videoPart);
 			
 			//here will send to the actual uploader
 		}
-
 	}
 
-	private File[] getChunkedFiles(final Video videoPart, final String tempDir) {
+	File[] getChunkedFiles(final Video videoPart, final String tempDir) {
 		final File directory = new File(tempDir);
 		final String originalName = videoPart.getFileName();
 		final File[] files = directory.listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(final File dir, final String name) {
-				return name.startsWith(originalName);
-			}
+
+			public boolean accept(File dir, String fileName) {
+				return fileName.startsWith(originalName) && fileName.indexOf("~.") > 0;
+			}			
+		});
+
+		Collections.sort(Arrays.asList(files), new Comparator<File>(){
+
+			public int compare(File f1, File f2) {
+				final String [] file1Parts = f1.getName().split("~.");
+				final Integer chunkNo1 = Integer.parseInt(file1Parts[1]);
+				
+				final String [] file2Parts = f2.getName().split("~.");
+				final Integer chunkNo2 = Integer.parseInt(file2Parts[1]);
+				return chunkNo1.compareTo(chunkNo2);
+			}			
 		});
 
 		return files;
