@@ -1,11 +1,14 @@
 package com.kana.dev.springboot.contacts.web;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -45,6 +48,10 @@ public class BulkUploadDownloadController {
 	@RequestMapping(value="/upload", method = { RequestMethod.POST}, headers="content-type != multipart/form-data")
 	public void uploadVideo(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
+		OutputStream stream = resp.getOutputStream();
+		//stream.write(b, off, len);
+		
+		PrintWriter writer = resp.getWriter();
 //		LOGGER.info(">>>>>..... Insdide {}.{}", this.getClass().getSimpleName(), "uploadVideo");
 //		LOGGER.info(">>>>..... using {} as a temporary storage area.", TEMP_DIR);
 		int chunk = -1;
@@ -181,5 +188,27 @@ public class BulkUploadDownloadController {
 				}
 			}
 		}
+	}
+	
+	public void downloadVideo(HttpServletRequest request, HttpServletResponse response, String fileName, int chunks){
+		int bufferSize = 64 * 1024; // One HBase block 
+		String sourceDirName = System.getProperty("java.io.tmpdir");
+		File sourceDir = new File(sourceDirName);
+		
+		File outputFile = new File("C:/Temp/Data/" + fileName);
+		try {
+			for (int i = 1; i <= chunks; i++) {
+				File inputSource = new File(sourceDir.getPath() + File.separator + fileName + "~." + i + "~." + chunks);
+				InputStream in = new BufferedInputStream(new FileInputStream(inputSource));
+
+				try (OutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile, outputFile.exists()), bufferSize)) {
+					IOUtils.copy(in, out);
+				}
+			}
+		} catch (final Exception e) {
+			outputFile.delete();
+			LOGGER.error("User may have aborted upload, so delete this chunk, file: {}", outputFile.getAbsoluteFile());
+		}
+
 	}
 }
