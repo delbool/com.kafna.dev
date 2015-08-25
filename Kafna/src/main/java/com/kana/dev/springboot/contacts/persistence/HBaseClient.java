@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.NavigableMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -101,5 +102,21 @@ public class HBaseClient {
         }
         
         table.close();
+    }
+    
+    public String[] getColumnsInColumnFamily(Result r, String ColumnFamily)
+    {
+
+          NavigableMap<byte[], byte[]> familyMap = r.getFamilyMap(Bytes.toBytes(ColumnFamily));
+          String[] Quantifers = new String[familyMap.size()];
+
+          int counter = 0;
+          for(byte[] bQunitifer : familyMap.keySet())
+          {
+              Quantifers[counter++] = Bytes.toString(bQunitifer);
+
+          }
+
+          return Quantifers;
     }
 }
