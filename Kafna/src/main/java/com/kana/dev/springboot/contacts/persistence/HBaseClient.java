@@ -20,24 +20,24 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 public class HBaseClient {
 
-    public static void main(String[] arg) throws IOException {
-        Configuration config = HBaseConfiguration.create();
+    public static void main(final String[] arg) throws IOException {
+        final Configuration config = HBaseConfiguration.create();
 
-        HTable testTable = new HTable(config, "test");
+        final HTable testTable = new HTable(config, "test");
 
         for (int i = 0; i < 100; i++) {
-            byte[] family = Bytes.toBytes("cf");
-            byte[] qual = Bytes.toBytes("a");
+            final byte[] family = Bytes.toBytes("cf");
+            final byte[] qual = Bytes.toBytes("a");
 
-            Scan scan = new Scan();
+            final Scan scan = new Scan();
             scan.addColumn(family, qual);
             scan.setStartRow(Bytes.toBytes(i));
             scan.setStopRow(Bytes.toBytes(i));
             
-            ResultScanner rs = testTable.getScanner(scan);
+            final ResultScanner rs = testTable.getScanner(scan);
             for (Result r = rs.next(); r != null; r = rs.next()) {
-                byte[] valueObj = r.getValue(family, qual);
-                String value = new String(valueObj);
+                final byte[] valueObj = r.getValue(family, qual);
+                final String value = new String(valueObj);
                 System.out.println(value);
             }
         }
@@ -45,25 +45,25 @@ public class HBaseClient {
         testTable.close();
     }
     
-    public void readColumn(String tableName, String colFamily, String qualifier, OutputStream outputStream) throws IOException{
-        Configuration config = HBaseConfiguration.create();
-        Connection connection = ConnectionFactory.createConnection(config);
-        Table table = connection.getTable(TableName.valueOf(tableName));
+    public void readColumn(final String tableName, final String colFamily, final String qualifier, final OutputStream outputStream) throws IOException{
+        final Configuration config = HBaseConfiguration.create();
+        final Connection connection = ConnectionFactory.createConnection(config);
+        final Table table = connection.getTable(TableName.valueOf(tableName));
        
-        int rows = 100;  //TODO how to get number of rows
+        final int rows = 100;  //TODO how to get number of rows
         for (int i = 0; i < rows; i++) {
-            byte[] family = Bytes.toBytes(colFamily);
-            byte[] qual = Bytes.toBytes(qualifier);
+            final byte[] family = Bytes.toBytes(colFamily);
+            final byte[] qual = Bytes.toBytes(qualifier);
 
-            Scan scan = new Scan();
+            final Scan scan = new Scan();
             scan.addColumn(family, qual);
             scan.setStartRow(Bytes.toBytes(i));
             scan.setStopRow(Bytes.toBytes(i));
             scan.setRowOffsetPerColumnFamily(1);
            
-            ResultScanner rs = table.getScanner(scan);
+            final ResultScanner rs = table.getScanner(scan);
              for (Result r = rs.next(); r != null; r = rs.next()) {
-                byte[] value = r.getValue(family, qual);               
+                final byte[] value = r.getValue(family, qual);               
                 outputStream.write(value);
                 System.out.println( new String(value) );
             }
@@ -72,27 +72,27 @@ public class HBaseClient {
         table.close();
     }
     
-    public void readColumnUsingGet(String tableName, String colFamily, String qualifier, OutputStream outputStream) throws IOException{
-        Configuration config = HBaseConfiguration.create();
-        Connection connection = ConnectionFactory.createConnection(config);
-        Table table = connection.getTable(TableName.valueOf(tableName));
+    public void readColumnUsingGet(final String tableName, final String colFamily, final String qualifier, final OutputStream outputStream) throws IOException{
+        final Configuration config = HBaseConfiguration.create();
+        final Connection connection = ConnectionFactory.createConnection(config);
+        final Table table = connection.getTable(TableName.valueOf(tableName));
        
-        int rows = 100;  //TODO how to get number of rows
+        final int rows = 100;  //TODO how to get number of rows
         for (int i = 0; i < rows; i++) {
-            byte[] family = Bytes.toBytes(colFamily);
-            byte[] qual = Bytes.toBytes(qualifier);
+            final byte[] family = Bytes.toBytes(colFamily);
+            final byte[] qual = Bytes.toBytes(qualifier);
 
-            Get get = new Get(Bytes.toBytes(i));
+            final Get get = new Get(Bytes.toBytes(i));
             get.addColumn(family, qual);
 
-            Scan scan = new Scan(get);
+            final Scan scan = new Scan(get);
             scan.setStartRow(Bytes.toBytes(i));
             scan.setStopRow(Bytes.toBytes(i));
            
-            ResultScanner rs = table.getScanner(scan);
+            final ResultScanner rs = table.getScanner(scan);
              for (Result r = rs.next(); r != null; r = rs.next()) {
-                byte[] value = r.getValue(family, qual); 
-                InputStream is = new ByteArrayInputStream(value);
+                final byte[] value = r.getValue(family, qual); 
+                final InputStream is = new ByteArrayInputStream(value);
 				while (is.read() != -1) {
 					outputStream.write(is.read());
 				}
@@ -102,4 +102,6 @@ public class HBaseClient {
         
         table.close();
     }
+    
+    
 }
