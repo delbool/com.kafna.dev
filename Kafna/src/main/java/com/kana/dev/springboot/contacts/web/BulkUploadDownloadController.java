@@ -125,14 +125,14 @@ public class BulkUploadDownloadController {
 							}
 						}
 						
-						try {
+//						try {
 							try (OutputStream out = new BufferedOutputStream(new FileOutputStream(dst, dst.exists()), BUF_SIZE)) {
 								IOUtils.copy(in, out);
 							}	
-						} catch (final Exception e) {
-							dst.delete();
-							LOGGER.error("User may have aborted upload, so delete this chunk, file: {}", dst.getAbsoluteFile());
-						}
+//						} catch (final Exception e) {
+//							dst.delete();
+//							LOGGER.error("User may have aborted upload, so delete this chunk, file: {}", dst.getAbsoluteFile());
+//						}
 					}
 				}
 			} catch (final Exception e) {
