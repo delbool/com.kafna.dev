@@ -3,6 +3,7 @@ package com.kana.dev.springboot.contacts.util;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,4 +74,25 @@ public class IOUtil3 {
 			}
 		}
 	}
+	
+	public static InputStream getInputStream(String fileName) throws FileNotFoundException{
+		return new FileInputStream(new File(fileName));
+	}
+	
+	public static boolean readBytesFromStream() throws IOException {
+		int bytesRead = 0;
+		
+		try (InputStream is = getInputStream("/downloads/eclipse/e.zip"); OutputStream os = new FileOutputStream("/downloads/eclipse/e5.zip")) {
+			byte[] buff = new byte[64 *1024];
+			while (-1 != (bytesRead = is.read(buff))) {
+				//System.out.println("Current Read: " + bytesRead);
+				os.write(buff, 0, bytesRead);
+			}
+			os.flush();
+		} catch (Exception ex) {
+			return false;
+		} 
+		return true;
+	}
+
 }
