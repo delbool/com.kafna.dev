@@ -15,6 +15,7 @@ public class HBaseStream {
 	public List<ByteArrayInputStream> getHbaseStreams() {
 		final byte[] bytes1 = Bytes.toBytes("This is data from cell1.\n");
 		final ByteArrayInputStream b1 = new ByteArrayInputStream(bytes1);
+
 		final byte[] bytes2 = Bytes.toBytes("This is data from cell2.\n\n");
 		final ByteArrayInputStream b2 = new ByteArrayInputStream(bytes2);
 
