@@ -37,7 +37,7 @@ public class HBaseStream {
 	public SequenceInputStream getSequenceInputStream() {
 		Vector<ByteArrayInputStream> inputStreams = new Vector<ByteArrayInputStream>();
 		inputStreams.add(getHbaseStreams().get(0));
-		inputStreams.add(getHbaseStreams().get(1));
+		//inputStreams.add(getHbaseStreams().get(1));
 		final Enumeration<ByteArrayInputStream> enu = inputStreams.elements();
 		SequenceInputStream sis = new SequenceInputStream(enu);
 		return sis;

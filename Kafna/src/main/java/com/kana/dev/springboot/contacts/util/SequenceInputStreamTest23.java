@@ -18,7 +18,7 @@ public class SequenceInputStreamTest23 {
 		fileLocations.add("C:/temp/data/testfile1.txt");
 		fileLocations.add("C:/temp/data/testfile2.txt");
 		fileLocations.add("C:/temp/data/testfile3.txt");
-
+		
 		final Vector<InputStream> inputStreams = new Vector<InputStream>();
 		inputStreams.add(new FileInputStream(fileLocations.get(0)));
 		final Enumeration<InputStream> enu = inputStreams.elements();
@@ -32,16 +32,16 @@ public class SequenceInputStreamTest23 {
 			if (sis.available() < 3 ) {
 				index++;
 				if (index < fileLocations.size()){
-					sis = addInputStreamToSequenceInputStream(fileLocations, inputStreams, index);
+					sis = addInputStreamToSequenceInputStream(fileLocations.get(index), inputStreams);
 				}
 			}
 		}
 		System.out.flush();
 	}
 
-	private static SequenceInputStream addInputStreamToSequenceInputStream(final List<String> fileLocations,
-			final Vector<InputStream> inputStreams, final int index) throws FileNotFoundException {		
-		inputStreams.add(new FileInputStream(fileLocations.get(index)));
+	private static SequenceInputStream addInputStreamToSequenceInputStream(final String fileLocation,
+			final Vector<InputStream> inputStreams) throws FileNotFoundException {		
+		inputStreams.add(new FileInputStream(fileLocation));
 		final Enumeration<InputStream> enu = inputStreams.elements();
 		final SequenceInputStream sis = new SequenceInputStream(enu);
 		
@@ -53,7 +53,6 @@ public class SequenceInputStreamTest23 {
 
 			@Override
 			public int read() throws IOException {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 		};
