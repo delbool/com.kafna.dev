@@ -11,7 +11,11 @@ public class IOUtil {
 
    public static byte[] readBytesFromFile(File file) throws IOException {
      InputStream is = new FileInputStream(file);
-   
+ 
+     // If this is reverted this file will have 63 lines .......
+     // jsdhfskdj fksjdhfksdh jksdhfkjsdf hsdkfh sdkjf hsdkj f hsdkj 
+     // sjdjfhksdjfhsdkj hkjsdhfksdj hkjsdfhskdjfhsdkjf hsd
+     // sjkhsdkjfh sdkjfh ksjfhsdkjfh sdkjf hsdkjfhsdkj
      long length = file.length();
      byte[] bytes = new byte[(int)length];
      int bufferSize = 64 * 1024;
