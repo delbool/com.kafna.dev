@@ -10,7 +10,6 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 public class HBaseStreamService {
 
-	private int cellCount = 0;
 	public Vector<ByteArrayInputStream> getHbaseStreams() {
 		final byte[] bytes1 = Bytes.toBytes("This is data from cell1.\n");
 		final ByteArrayInputStream b1 = new ByteArrayInputStream(bytes1);
@@ -29,16 +28,21 @@ public class HBaseStreamService {
 		return inputStreams;
 	}
 
-	public SequenceInputStream getNextSequenceInputStream() {
-		final Vector<ByteArrayInputStream> inputStreams = new Vector<ByteArrayInputStream>();
-		final ByteArrayInputStream bas = getHbaseStreams().get(cellCount++);
-		if (bas == null) {
-			return null;
-		}
-		
-		inputStreams.add(bas);
-		SequenceInputStream sis = new SequenceInputStream(inputStreams.elements());
-		return sis;
+	public ByteArrayInputStream readBlobAStream(String tableName, String rowId, int cellCount) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+//	public SequenceInputStream getNextSequenceInputStream(int cellCount) {
+//		final Vector<ByteArrayInputStream> inputStreams = new Vector<ByteArrayInputStream>();
+//		final ByteArrayInputStream bas = getHbaseStreams().get(cellCount);
+//		if (bas == null) {
+//			return null;
+//		}
+//		
+//		inputStreams.add(bas);
+//		SequenceInputStream sis = new SequenceInputStream(inputStreams.elements());
+//		return sis;
+//	}
 
 }
