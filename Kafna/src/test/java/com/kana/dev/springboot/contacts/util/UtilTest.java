@@ -1,6 +1,7 @@
 package com.kana.dev.springboot.contacts.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -9,6 +10,8 @@ import java.io.OutputStream;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
 
 
@@ -87,4 +90,26 @@ public class UtilTest {
 		System.out.println("Time taken: " + (end - start));
 
 	}
+	
+	@Test
+	public void testAppendToByteBuffer() throws IOException{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		byte [] myColData = new byte[5];
+		
+		byte[] bytes1 = Bytes.toBytes("The quick brown fox-");
+		byte[] bytes2 = Bytes.toBytes("jumps over the lazy-");
+		byte[] bytes3 = Bytes.toBytes("dog. An old time abc lesson.");
+		
+		baos.write(bytes1);
+		baos.write(bytes2);
+		baos.write(bytes3);
+
+		myColData = baos.toByteArray();
+		
+		String allBytes = Bytes.toString(myColData);
+		System.out.println(allBytes);
+	}
+
+
 }
