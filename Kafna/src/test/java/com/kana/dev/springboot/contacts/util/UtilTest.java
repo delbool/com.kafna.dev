@@ -111,5 +111,22 @@ public class UtilTest {
 		System.out.println(allBytes);
 	}
 
+	@Test
+	public void testAppendToByteBufferApacheUtils() throws IOException{
+
+		byte [] myColData = null;
+		
+		byte[] bytes1 = Bytes.toBytes("The quick brown fox-");
+		byte[] bytes2 = Bytes.toBytes("jumps over the lazy-");
+		byte[] bytes3 = Bytes.toBytes("dog. An old time abc lesson.");
+		
+		myColData = ArrayUtils.addAll(myColData, bytes1);
+		myColData = ArrayUtils.addAll(myColData, bytes2);
+		myColData = ArrayUtils.addAll(myColData, bytes3);
+		
+		String allBytes = Bytes.toString(myColData);
+		System.out.println("Size of byte array: " + myColData.length + "   And the content: " + allBytes);
+	}
+
 
 }
