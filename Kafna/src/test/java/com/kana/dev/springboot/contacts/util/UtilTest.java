@@ -128,5 +128,32 @@ public class UtilTest {
 		System.out.println("Size of byte array: " + myColData.length + "   And the content: " + allBytes);
 	}
 
+	public static String generateAlphaNumericSortableName(final String columnPrefix, final int columnIndex) {
+		StringBuilder buf = new StringBuilder();
+		try {
+			buf.append(columnPrefix);
+			buf.append("_");
+			if (columnIndex < 10) {
+				buf.append('0');
+			}
+			if (columnIndex < 100) {
+				buf.append('0');
+			}
+			if (columnIndex < 1000) {
+				buf.append('0');
+			}
+			if (columnIndex < 10000) {
+				buf.append('0');
+			}
+			if (columnIndex < 100000) {
+				buf.append('0');
+			}
+			buf.append(columnIndex);
+			return buf.toString();
+		} finally {
+			// do nothing
+		}
+	}
+
 
 }
