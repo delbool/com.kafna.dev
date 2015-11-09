@@ -145,7 +145,7 @@ public class BulkUploadDownloadController {
 
 		if (chunk == chunks - 1) {
 			LOGGER.info("Uploaded filename: " + name);
-			videoService.uploadVideoFile(videoPart, TEMP_DIR);
+			//videoService.uploadVideoFile(videoPart, TEMP_DIR);
 		}
 		
 		

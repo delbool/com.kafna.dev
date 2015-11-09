@@ -17,30 +17,28 @@ public class SequenceInputStreamTest2 {
 		fileLocations.add("C:/temp/data/testfile2.txt");
 		fileLocations.add("C:/temp/data/testfile3.txt");
 		
-		
-//		final FileInputStream fis1 = new FileInputStream("C:/temp/data/testfile1.txt");
-//		final FileInputStream fis2 = new FileInputStream("C:/temp/data/testfile2.txt");
-//		final FileInputStream fis3 = new FileInputStream("C:/temp/data/testfile3.txt");
 
 		final Vector<InputStream> inputStreams = new Vector<InputStream>();
 		for (final String fileLocation : fileLocations){
 			inputStreams.add(new FileInputStream(fileLocation));
 		}
-		
-		
-//		inputStreams.add(new FileInputStream(fileLocations.get(0)));
-//		inputStreams.add(fis2);
-//		inputStreams.add(fis3);
 
-
+		SequenceInputStream sis = null;
 		int oneByte;
 		for (int i = 0; i < inputStreams.size(); i++) {
 			final Enumeration<InputStream> enu = inputStreams.elements();
-			final SequenceInputStream sis = new SequenceInputStream(enu);
+			sis = new SequenceInputStream(enu);
+			boolean nextAdded = false;
 			while ((oneByte = sis.read()) != -1) {
+				int available = sis.available();
+				System.out.println("Avialble: " + available);
+				if (available < 2 && !nextAdded){
+					inputStreams.add(new FileInputStream(fileLocations.get(i)));
+					nextAdded = true;
+				}
 				System.out.write(oneByte);
 			}
-			inputStreams.add(new FileInputStream(fileLocations.get(i)));
+			
 		}
 
 		System.out.flush();
